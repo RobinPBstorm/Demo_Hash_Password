@@ -2,6 +2,7 @@
 using DemoHashPassword.DL.Entities;
 using DemoHashPasword.BLL.Intefaces;
 using BCrypt.Net;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DemoHashPasword.BLL.Services
 {
@@ -9,13 +10,15 @@ namespace DemoHashPasword.BLL.Services
     {
         private readonly IAuthRepository _repository;
         private readonly IHashService _hashService;
-        public AuthService(IAuthRepository authRepository, IHashService hashService)
+        private readonly JWTService _tokenService;
+        public AuthService(IAuthRepository authRepository, IHashService hashService, JWTService jWTService)
         {
             _repository = authRepository;
             _hashService = hashService;
+            _tokenService = jWTService;
         }
 
-        public User Login(string username, string password)
+        public string Login(string username, string password)
         {
             User? currentUser = _repository.GetOneByUsername(username);
 
@@ -31,7 +34,9 @@ namespace DemoHashPasword.BLL.Services
                 throw new Exception("Le login ou le mot de passe est incorrect");
             }
 
-            return currentUser;
+
+
+            return _tokenService.GenerateToken(currentUser);
         }
 
         public void Register(User user, string password)

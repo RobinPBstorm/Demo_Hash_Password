@@ -4,6 +4,7 @@ using DemoHashPassword.DL.Entities;
 using DemoHashPassword.DTOs;
 using DemoHashPasword.BLL.Intefaces;
 using DemoHashPasword.BLL.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
@@ -22,13 +23,14 @@ namespace DemoHashPassword.API.Controllers
         }
 
         // GET: api/<AuthController>
+        [AllowAnonymous]
         [HttpPost("Login")]
         public IActionResult Login(LoginDTO login)
         {
             try
             {
-                User currentUser = _service.Login(login.Username, login.Password);
-                return Ok(currentUser);
+                string token = _service.Login(login.Username, login.Password);
+                return Ok(token);
             }
             catch (Exception exception)
             {
@@ -37,6 +39,7 @@ namespace DemoHashPassword.API.Controllers
         }
 
         // GET api/<AuthController>/5
+        [AllowAnonymous]
         [HttpPost("Register")]
         public IActionResult Register(UserRegisterForm userRegister)
         {

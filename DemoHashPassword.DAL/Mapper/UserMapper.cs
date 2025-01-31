@@ -17,7 +17,8 @@ namespace DemoHashPassword.DAL.Mapper
                 Id = (int)reader["Id"],
                 Username = (string)reader["Username"],
                 Name = (string)reader["Name"],
-                Firstname = (string)reader["Firstname"]
+                Firstname = (string)reader["Firstname"],
+                IsAdmin = (bool)reader["IsAdmin"]
             };
         }
     }

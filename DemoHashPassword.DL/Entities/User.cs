@@ -16,5 +16,6 @@ namespace DemoHashPassword.DL.Entities
         public string Name { get; set; }
         public string Firstname { get; set; }
         public DateOnly BirthDate { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

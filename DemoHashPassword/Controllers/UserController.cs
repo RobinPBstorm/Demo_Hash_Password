@@ -2,12 +2,14 @@
 using DemoHashPassword.DTOs;
 using DemoHashPasword.BLL.Intefaces;
 using DemoHashPasword.BLL.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DemoHashPassword.API.Controllers
 {
+    [Authorize("authPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -27,6 +29,7 @@ namespace DemoHashPassword.API.Controllers
         }
 
         // GET api/<UserController>/5
+        [Authorize("adminPolicy")]
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(UserFullDTO))]
         [ProducesResponseType(404)]
