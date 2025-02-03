@@ -36,15 +36,20 @@ builder.Services.AddScoped<IHashService, BCryptService>();
 #region Service de gestion du JWT
 builder.Services.AddScoped<JWTService>();
 #endregion
+
+#region Gestion des refresh token
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+#endregion
 #endregion Services
 #endregion
 
 
-#region Middlewar pour JWT
+#region Middleware pour JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.SaveToken = true;
+        //options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateIssuer = true,

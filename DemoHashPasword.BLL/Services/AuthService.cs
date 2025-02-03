@@ -10,15 +10,17 @@ namespace DemoHashPasword.BLL.Services
     {
         private readonly IAuthRepository _repository;
         private readonly IHashService _hashService;
-        private readonly JWTService _tokenService;
-        public AuthService(IAuthRepository authRepository, IHashService hashService, JWTService jWTService)
+        private readonly IRefreshTokenService _refreshTokenService;
+        public AuthService(IAuthRepository authRepository, 
+                            IHashService hashService,
+                            IRefreshTokenService refreshTokenService)
         {
             _repository = authRepository;
             _hashService = hashService;
-            _tokenService = jWTService;
+            _refreshTokenService = refreshTokenService;
         }
 
-        public string Login(string username, string password)
+        public Tokens Login(string username, string password)
         {
             User? currentUser = _repository.GetOneByUsername(username);
 
@@ -34,9 +36,7 @@ namespace DemoHashPasword.BLL.Services
                 throw new Exception("Le login ou le mot de passe est incorrect");
             }
 
-
-
-            return _tokenService.GenerateToken(currentUser);
+            return _refreshTokenService.GenerateRefreshToken(username);
         }
 
         public void Register(User user, string password)

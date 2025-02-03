@@ -10,6 +10,6 @@ namespace DemoHashPasword.BLL.Intefaces
     public interface IAuthService
     {
         void Register(User user, string password);
-        string Login(string username, string password);
+        Tokens Login(string username, string password);
     }
 }
