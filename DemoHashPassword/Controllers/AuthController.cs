@@ -13,7 +13,8 @@ using System.Security.Claims;
 
 namespace DemoHashPassword.API.Controllers
 {
-    [Route("api/[controller]")]
+	[Authorize("authPolicy")]
+	[Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -88,7 +89,7 @@ namespace DemoHashPassword.API.Controllers
                 }
 
                 List<Claim> claims = identity.Claims.ToList();
-                // or
+                
                 string idFromToken = claims.FirstOrDefault((claim) => (claim.Type == ClaimTypes.NameIdentifier)).Value;
 
                 if (idFromToken is null)
@@ -107,6 +108,37 @@ namespace DemoHashPassword.API.Controllers
             {
                 return Unauthorized(exc.Message);
             }
+        }
+
+        [HttpPut("ChangePassword")]
+        public IActionResult ChangePassword([FromBody] PasswordChangeForm passwordChangeForm)
+        {
+            if (passwordChangeForm.OldPassword == passwordChangeForm.NewPassword)
+            {
+                return BadRequest("Le nouveau mot de passe ne doit pas être le même que l'ancien!");
+            }
+            try
+            {
+                // TODO check token valid ? ou null
+				ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;
+				if (identity is null)
+				{
+					throw new Exception("Aucun token trouvé ou Token vide");
+				}
+
+				List<Claim> claims = identity.Claims.ToList();
+
+				string idFromToken = claims.FirstOrDefault((claim) => (claim.Type == ClaimTypes.NameIdentifier)).Value;
+				
+                _service.ChangePassword(int.Parse(idFromToken), passwordChangeForm.OldPassword, passwordChangeForm.NewPassword);
+
+			}
+            catch(Exception exception)
+			{
+				return Unauthorized(exception.Message);
+			}
+
+			return NoContent();
         }
     }
 }

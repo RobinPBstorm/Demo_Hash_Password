@@ -19,14 +19,14 @@ namespace DemoHashPasword.BLL.Services
                 hashType = HashType.SHA384;
             }
 
-            return BCrypt.Net.BCrypt.Verify(password, hashPassword);
+            return BCrypt.Net.BCrypt.Verify(password, hashPassword,false, hashType);
         }
 
         public string HashPassword(string password)
         {
             string saltConfig = _Configuration["BCryptConfig:salt"];
 
-            if (saltConfig is not null)
+            if (string.IsNullOrWhiteSpace(saltConfig))
             {
                 return BCrypt.Net.BCrypt.HashPassword(password, saltConfig);
             }

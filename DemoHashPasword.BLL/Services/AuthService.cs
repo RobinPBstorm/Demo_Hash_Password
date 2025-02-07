@@ -9,18 +9,21 @@ namespace DemoHashPasword.BLL.Services
     public class AuthService : IAuthService
     {
         private readonly IAuthRepository _repository;
-        private readonly IHashService _hashService;
+        private readonly IUserRepository _userRepository;
+		private readonly IHashService _hashService;
         private readonly IRefreshTokenService _refreshTokenService;
         public AuthService(IAuthRepository authRepository, 
                             IHashService hashService,
-                            IRefreshTokenService refreshTokenService)
+                            IRefreshTokenService refreshTokenService,
+                            IUserRepository userRepository)
         {
             _repository = authRepository;
             _hashService = hashService;
             _refreshTokenService = refreshTokenService;
+            _userRepository = userRepository;
         }
 
-        public Tokens Login(string username, string password)
+		public Tokens Login(string username, string password)
         {
             User? currentUser = _repository.GetOneByUsername(username);
 
@@ -41,8 +44,25 @@ namespace DemoHashPasword.BLL.Services
 
         public void Register(User user, string password)
         {
-            string hashPassword = _hashService.HashPassword(password);
-            _repository.Register(user, hashPassword);
-        }
-    }
+            if (_repository.GetOneByUsername(user.Username) is not null)
+            {
+                throw new Exception("Ce Username est déjà utilisé");
+            }
+
+			string hashPassword = _hashService.HashPassword(password);
+			_repository.Register(user, hashPassword);
+		}
+
+		public void ChangePassword(int id, string oldPassword, string newPassword)
+		{
+            User user = _userRepository.GetOneById(id);
+            string passwordDb = _repository.GetPassword(user.Username);
+			if (!_hashService.Verify(oldPassword, passwordDb))
+			{
+				throw new Exception("Vous n'avez pas donner le bon mot de passe");
+			}
+
+            _repository.ChangePassword(id, _hashService.HashPassword(newPassword));
+		}
+	}
 }

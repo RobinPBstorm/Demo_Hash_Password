@@ -11,5 +11,7 @@ namespace DemoHashPasword.BLL.Intefaces
     {
         void Register(User user, string password);
         Tokens Login(string username, string password);
-    }
+        void ChangePassword(int id, string oldPassword, string newPassword);
+
+	}
 }

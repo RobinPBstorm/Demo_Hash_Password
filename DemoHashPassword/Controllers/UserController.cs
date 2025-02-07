@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DemoHashPassword.API.Controllers
 {
-    [Authorize("authPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -29,7 +28,6 @@ namespace DemoHashPassword.API.Controllers
         }
 
         // GET api/<UserController>/5
-        [Authorize("adminPolicy")]
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(UserFullDTO))]
         [ProducesResponseType(404)]

@@ -28,7 +28,7 @@ namespace DemoHashPasword.BLL.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin": "user")
+                new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin": "User")
             };
 
 

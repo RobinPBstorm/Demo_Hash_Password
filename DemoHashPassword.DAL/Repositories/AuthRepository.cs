@@ -82,5 +82,28 @@ namespace DemoHashPassword.DAL.Repositories
                 }
             }
         }
-    }
+		public void ChangePassword(int id, string password)
+		{
+			using (SqlCommand cmd = _connection.CreateCommand())
+			{
+				cmd.CommandText = "UPDATE [User] " +
+                    "SET [Password] = @password " +
+					"WHERE [Id] = @id";
+
+				cmd.Parameters.AddWithValue("password", password);
+				cmd.Parameters.AddWithValue("id", id);
+
+				try
+				{
+					OpenConnection(_connection);
+					cmd.ExecuteNonQuery();
+					_connection.Close();
+				}
+				catch (SqlException ex)
+				{
+					throw ex;
+				}
+			}
+		}
+	}
 }

@@ -12,5 +12,6 @@ namespace DemoHashPassword.DAL.Interfaces
         User? GetOneByUsername(string username);
         void Register(User user, string password);
         string GetPassword(string username);
-    }
+		void ChangePassword(int id, string password);
+	}
 }
